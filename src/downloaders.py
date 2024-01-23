@@ -100,25 +100,21 @@ def huggingface_download(
     """
     assert not (data_dir and data_files)
 
-    num_proc = max(multiprocessing.cpu_count() // 2, 1)
     if data_files:
-        dset = load_dataset(data_address, data_files=data_files, num_proc=num_proc)
+        dset = load_dataset(data_address, data_files=data_files, streaming=True)
     elif data_dir:
-        dset = load_dataset(data_address, data_dir=data_dir, num_proc=num_proc)
+        dset = load_dataset(data_address, data_dir=data_dir, streaming=True)
     elif name:
-        dset = load_dataset(data_address, name)
+        dset = load_dataset(data_address, name, streaming=True)
     else:
-        dset = load_dataset(data_address, num_proc=num_proc)
+        dset = load_dataset(data_address, streaming=True)
 
     if split:
         dset = dset[split]
 
-    try:
-        dset = dset.to_list()
-    except ValueError:
-        print("Trouble converting Hugging Face dataset to list...")
-        pass
-    return dset
+    subsample = [sample for sample in dset.take(2)]
+
+    return subsample
 
 
 def detect_encoding(file_path):

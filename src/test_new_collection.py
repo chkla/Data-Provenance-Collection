@@ -11,6 +11,7 @@ from collection_mapper import COLLECTION_FN_MAPPER
 from downloader import Downloader
 # from downloaders import pool_filter
 from download_and_filter import get_collection_to_uid_and_filter_ids
+import time
 
 
 ATTRIBUTE_MAPPER = {
@@ -307,6 +308,7 @@ def run_tests(
     assert os.path.exists(collection_filepath), f"There is no collection file at {collection_filepath}"
     collection_info = io.read_json(collection_filepath)
 
+    time_tracker = time.time()
     # Test basic properties of the json file.
     # print(f"Testing the json file has the correct entry types and order in {collection_name}")
     test_json_correctness(
@@ -315,20 +317,25 @@ def run_tests(
         template_spec,
         error_handler
     )
+    print(f"Finished json correctness {collection_name} in {time.time()-time_tracker} seconds")
 
+    time_tracker = time.time()
     # Test the collection json file entries are valid
     test_collection_summary(
         collection_name,
         collection_info,
         error_handler
     )
+    print(f"Finished collection summary {collection_name} in {time.time()-time_tracker} seconds")
 
+    time_tracker = time.time()
     # Test the downloader and preparer works properly
     test_downloader_and_preparer(
         all_collection_infos,
         collection_info,
         error_handler
     )
+    print(f"Finished downloader and preparer {collection_name} in {time.time()-time_tracker} seconds")
 
     if error_handler.no_halt_on_error:
         error_handler.print_errors()
