@@ -6,7 +6,8 @@ collection: null
 # includes commerically licensed, unspecified, and non-commerically licensed datasets.
 # `academic-only` includes all datasets, even those with academic-only restrictions.
 license_use: "academic-only"
-license_sources: ["DataProvenance"]
+# a list of license sources from where the license information should be retrieved
+license_sources: ["HuggingFace"]
 # If 1, OpenAI generated data will be included even if license_use would have excluded it
 openai-license-override: 0
 # 1 means datasets with attribution requirements are fine, 0 excludes them
